@@ -1,0 +1,87 @@
+<div ng-hide='!loaded' class="container node-body">
+  <h2 class="list-header">Tree Manager</h2>
+  <div class="row breadcrumb node-option-bar" style="text-align: center; vertical-align: middle;">
+    <div ng-if="error" class="alert alert-danger"><strong>Error:</strong> {{ error }}</div>
+    <span class="col-md-3 col-sm-6 col-xs-24 node-option"
+          style="text-align: center; vertical-align: middle;">
+      <button class="btn btn-warning" 
+              ng-click="saveChanges()"
+              ng-if="dirty_nodes.length || delete_nodes.length"
+              style="width: 200px; margin-top: 10px; margin-left: 200px;">
+              Save Changes
+      </button>
+    </span>
+    <span class="node-option col-md-3 col-sm-6 col-xs-12 pull-right"
+          style="text-align: center; margin-top: 10px;">
+      <button class="btn btn-primary" ng-click="toggleAll(true)">Collapse All</button>
+      <button class="btn btn-primary" ng-click="toggleAll(false)">Expand All</button>
+    </span>
+  </div>
+  <table class="simple node-report">
+    <thead>
+      <tr>
+        <th>Node</th>
+        <th>Options</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="node_pair in finalTree" tm-tree-node ng-hide="node.hidden">
+        <td>
+          <div class="row">
+            <div class="col-xs-1">
+              <span ng-if="node.delete" class="glyphicon glyphicon-minus" style="color: red;"></span>
+              <span ng-if="node.dirty && !node.delete" class="glyphicon glyphicon-pencil" style="color: green;"></span>
+            </div>
+            <div class="col-xs-11">
+              <span style="display:inline-block; padding-left:{{ indent_level * 24 }}px;"
+                    class="depth{{ indent_level }}">
+                <a ng-if="node.children.length" class="expandable" ng-click="toggle($event)">
+                  <span class="glyphicon glyphicon-triangle-right glyph-15x" ng-if="!node.children_hidden"></span> 
+                  <span class="glyphicon glyphicon-triangle-top glyph-15x" ng-if="node.children_hidden"></span>
+                  <input ng-if="node.edit && node.depth > 0"
+                    type="text" ng-model="node.new_name"
+                    style="width: auto;">
+                  <label ng-if="!node.edit">{{ node.new_name }}</label>
+                </a>
+                <span ng-if="!node.children.length">
+                  <span class="glyphicon glyphicon-none glyph-15x" ng-if="!node.children.length"></span>
+                  <input ng-if="node.edit && node.depth > 0" type="text" ng-model="node.new_name">
+                  <label ng-if="!node.edit">{{ node.new_name }}</label>
+                </span>
+              </span>
+            </div>
+          </div>
+        </td>
+        <td style="cursor: pointer; display: inline;" class="pull-right">
+          <a href="" ng-if="!node.edit && node.depth != null"
+            ng-show="!node.delete"
+            ng-click="edit(node)">Edit 
+          </a>
+          <a href="" ng-if="!node.edit && !node.new"
+            ng-show="!node.delete"
+            ng-click="addChild(node)"> Add Child 
+          </a>
+          <a href="" ng-if="!node.edit && node.depth > 0 && !node.new"
+            ng-show="!node.delete"
+            ng-click="addParent(node)"> Add Parent
+          </a>
+          <a href="" ng-if="!node.edit && node.depth != null && !node.delete && !node.new"
+            style="color: red;"
+            ng-click="delete(node)"> Delete
+          </a>
+          <a href="" ng-if="!node.edit && node.depth != null && node.delete && !node.new && !node.parent_node.delete"
+            style="display: inline;  color: red;"
+            ng-click="undoDelete(node)"> Undo Delete
+          </a>
+          <p ng-if="node.parent_node.delete">
+            This node will be deleted with it's parent node. Undo delete on parent node to avoid it from being deleted.
+          </p>
+          <button ng-if="node.edit && !node.new" ng-click="submitEdit(node)">Submit Edit</button>
+          <button ng-if="node.edit && node.new" ng-click="submitNew(node)">Submit New</button>
+          <button ng-if="!node.edit && node.new" ng-click="commitNew(node)">Commit New</button>
+          <button ng-if="!node.edit && node.new" ng-click="removeNew(node)">Remove New</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

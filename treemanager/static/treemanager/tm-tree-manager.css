@@ -1,0 +1,20 @@
+table.simple.node-report th:nth-child(1) {
+  margin-left: 50px;
+}
+table.simple.node-report td:nth-child(1) {
+  width:50%;
+  font-size: 14px;
+  margin-right: 30px;
+}
+
+table.simple.node-report td:nth-child(2),
+table.simple.node-report th:nth-child(2)  {
+  width:50%;
+  border-left:1px solid black;
+}
+
+table.simple.node-report td:nth-child(2),
+table.simple.node-report td:nth-child(2) p,
+table.simple.node-report td:nth-child(2) button{
+  font-size: 12px !important;
+}

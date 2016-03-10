@@ -1,0 +1,5 @@
+Pillow==2.4.0
+boto==2.29.1
+psycopg2==2.5.3
+Django==1.8.3
+django-treebeard==3.0

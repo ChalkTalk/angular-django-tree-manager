@@ -1,0 +1,41 @@
+{% extends 'treemanager/base.html' %}
+{% load staticfiles %}
+
+{% block scripts %}
+  {{ block.super }}
+  <script src="{% static 'treemanager/tm-tree-manager-module.js' %}"></script>
+  <script src="{% static 'treemanager/tm-tree-node-directive.js' %}"></script>
+  <script src="{% static 'treemanager/tm-tree-manager-directive.js' %}"></script>
+  <script src="{% static 'treemanager/tm-tree-build-factory.js' %}"></script>
+  <script src="{% static 'treemanager/tm-tree-prep-factory.js' %}"></script>
+
+  <script>
+    angular.module('tmTreeManagerModule')
+    .constant("TREE_URL", "{% url 'treemanager:tree-manager' %}")
+    .constant('STATIC_URL', '{{ STATIC_URL }}')
+    .constant("UPDATE_TREE", "{% url 'treemanager:update-tree' %}")
+    .constant("ADD_NODE", "{% url 'treemanager:add-node' %}")
+    .controller('tmTreeManagerCtrl', ['$scope', '$http', 'TREE_URL', tmTreeManagerCtrl]);
+
+    function tmTreeManagerCtrl($scope, $http, TREE_URL) {
+      console.log("enter ctrl");
+      $scope.TreePromise = $http.get(TREE_URL).then(function(response) {
+        return response.data;
+      });
+    }
+  </script>
+{% endblock %}
+
+{% block head %}
+  <link rel="stylesheet" href="{% static 'treemanager/tm-tree-manager.css' %}"></link>
+{% endblock head %}
+
+{% block content %}
+<div ng-app="tmTreeManagerModule">
+  <div ng-controller="tmTreeManagerCtrl">
+    <div class="container">
+      <div tm-tree></div>
+    </div>
+  </div>
+</div>
+{% endblock %}
